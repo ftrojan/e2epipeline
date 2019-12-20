@@ -2,3 +2,4 @@ networkx
 sklearn
 numpy
 pandas
+scipy
