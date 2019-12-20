@@ -7,8 +7,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.calibration import CalibratedClassifierCV
 
-from e2epipeline import E2EPipeline, Step, name, rename
-from custom_transformers import (
+from src.e2epipeline import E2EPipeline, Step, name, rename
+from src.custom_transformers import (
     PruneHierarchicalTarget,
     InfrequentClassFilter,
     MergeSubjectBody,

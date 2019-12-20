@@ -6,7 +6,7 @@ import logging
 import numpy as np
 from sklearn.base import BaseEstimator
 
-from e2epipeline import E2EPipeline
+from src.e2epipeline import E2EPipeline
 
 
 class TransformerX(BaseEstimator):

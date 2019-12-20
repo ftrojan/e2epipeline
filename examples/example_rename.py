@@ -21,8 +21,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.base import BaseEstimator
 
-from e2epipeline import E2EPipeline, Step, name, rename, object_info
-from custom_transformers import PruneHierarchicalTarget, InfrequentClassFilter
+from src.e2epipeline import E2EPipeline, Step, name, rename, object_info
+from src.custom_transformers import PruneHierarchicalTarget, InfrequentClassFilter
 
 
 class MergeSubjectBody(BaseEstimator):

@@ -12,8 +12,8 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.calibration import CalibratedClassifierCV
 
-from e2epipeline import E2EPipeline
-from custom_transformers import PruneHierarchicalTarget, InfrequentClassFilter
+from src.e2epipeline import E2EPipeline
+from src.custom_transformers import PruneHierarchicalTarget, InfrequentClassFilter
 
 logging.basicConfig(
     level=logging.DEBUG,

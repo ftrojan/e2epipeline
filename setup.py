@@ -7,6 +7,6 @@ setup(
     author='Filip Trojan',
     author_email='f.trojan@centrum.cz',
     packages=['e2epipeline'],
-    package_dir={'e2epipeline': ''},
+    package_dir={'e2epipeline': 'src'},
     install_requires=['numpy', 'pandas'],
 )
