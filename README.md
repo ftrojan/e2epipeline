@@ -46,4 +46,36 @@ The design principle #3 is extensibility. To achieve the desired flexibility you
 
 ## Tutorial
 
+### Installation and Import
+
+Install the package directly from Github using the following shell command
+```bash
+pip install git+https://github.com/ftrojan/e2epipeline.git
+```
+
+Basic recommended import statement is
+```python
+from e2epipeline import E2EPipeline
+```
+
+You might find useful to import also class `Step` and functions `rename`, `name`, `reposition`, `position` for more advanced usage. You will learn about those later in this tutorial, but for the basic functionality they are not necessary.
+
+### Standard Scikit-learn Pipeline
+
+TBD
+
+### Filter out Infrequent Classes
+
+TBD
+
+### Add Confidence to the Output
+
+TBD
+
+### Keep Intermediate Results By Name
+
+TBD
+
+### Keep Intermediate Results By Position
+
 TBD
