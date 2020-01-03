@@ -9,5 +9,6 @@ setup(
     packages=['e2epipeline'],
     package_dir={'e2epipeline': 'src'},
     install_requires=['numpy', 'pandas'],
-    data_files=[('', ['LICENSE'])]
+    license='BSD 2-Clause License',
+    url='https://github.com/ftrojan/e2epipeline',
 )
