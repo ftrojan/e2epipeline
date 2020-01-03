@@ -9,4 +9,5 @@ setup(
     packages=['e2epipeline'],
     package_dir={'e2epipeline': 'src'},
     install_requires=['numpy', 'pandas'],
+    data_files=[('', ['LICENSE'])]
 )
