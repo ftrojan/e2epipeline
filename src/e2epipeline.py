@@ -14,6 +14,7 @@ from typing import Optional, Union, Callable, Any, List
 
 
 def object_info(obj) -> str:
+    """Provide brief textual representation of an object of selected types. Useful for debugging."""
     if isinstance(obj, tuple):
         res = f"tuple{len(obj)} = ({', '.join([object_info(xi) for xi in obj])})"
     elif isinstance(obj, dict):
@@ -34,6 +35,7 @@ def object_info(obj) -> str:
 
 
 def state_from_scratch(args: tuple, kwargs: dict) -> dict:
+    """Create pipeline state from (args, kwargs)."""
     state = {i: v for i, v in enumerate(args)}
     state.update(kwargs)
     return state
@@ -52,7 +54,7 @@ def state_reader(state: dict, consuming_callable: Callable) -> tuple:
     for i, (parameter_name, parameter) in enumerate(signature.parameters.items()):
         if parameter_name in state.keys():
             kwargs[parameter_name] = state[parameter_name]
-        elif i < sum([isinstance(k, int) for k in state.keys()]) and is_compatible(parameter, type(state[i])):
+        elif i in state.keys() and is_compatible(parameter, type(state[i])):
             args.append(state[i])
     return args, kwargs
 
@@ -80,6 +82,7 @@ def state_writer(state: dict, output: Any) -> dict:
 
 
 def infer_parameter_type(parameter: inspect.Parameter):
+    """Infer callable parameter type using also the default value."""
     parameter_type = parameter.annotation
     if parameter_type == inspect.Parameter.empty:
         if parameter.default is not None and not parameter.default == inspect.Parameter.empty:
@@ -88,6 +91,7 @@ def infer_parameter_type(parameter: inspect.Parameter):
 
 
 def is_compatible(parameter: inspect.Parameter, data_type):
+    """Check compatibility of a parameter and a data type."""
     parameter_type = infer_parameter_type(parameter)
     if parameter_type == inspect.Parameter.empty:
         compatible = True
@@ -103,23 +107,45 @@ def is_compatible(parameter: inspect.Parameter, data_type):
     return compatible
 
 
-def rename(mapping: dict) -> Callable:
-    def rename_state(state: dict) -> dict:
+def remap_input(mapping: dict) -> Callable:
+    """Pick inputs from state."""
+    def remap_state(state: dict) -> dict:
         output = {mapping.get(k, k): v for k, v in state.items()}
         return output
-    return rename_state
+    return remap_state
 
 
-def name(names: Union[List[str], str]) -> Callable:
+def rename(mapping: dict) -> Callable:
+    """Pick inputs from state by name."""
+    return remap_input(mapping)
+
+
+def reposition(mapping: dict) -> Callable:
+    """Pick inputs from state by position."""
+    return remap_input(mapping)
+
+
+def remap_output(slots: Union[List[str], List[int], str, int]) -> Callable:
+    """Remap output to state."""
     def name_tuple(output: tuple) -> dict:
         if isinstance(output, tuple):
-            result = {n: v for n, v in zip(names, output)}
-        elif isinstance(names, str):
-            result = {names: output}
+            result = {n: v for n, v in zip(slots, output)}
+        elif isinstance(slots, str) or isinstance(slots, int):
+            result = {slots: output}
         else:
             result = output
         return result
     return name_tuple
+
+
+def name(names: Union[List[str], str]) -> Callable:
+    """Name output and store in the state."""
+    return remap_output(names)
+
+
+def position(positions: Union[List[int], int]) -> Callable:
+    """Place output in the state to a predefined positions."""
+    return remap_output(positions)
 
 
 class Step:

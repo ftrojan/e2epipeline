@@ -7,7 +7,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.calibration import CalibratedClassifierCV
 
-from src.e2epipeline import E2EPipeline, Step, name, rename
+from src.e2epipeline import E2EPipeline, Step, name, rename, position, reposition
 from src.custom_transformers import (
     PruneHierarchicalTarget,
     InfrequentClassFilter,
@@ -163,4 +163,51 @@ def test_preprocessing_rename():
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
     pipeline.fit(x=x_train, y=y_train)
     y_pred = pipeline.predict(x=x_test)
+    assert y_pred.shape == y_test.shape
+
+
+def test_preprocessing_reposition():
+    """Keep different states of pipeline using reposition and position."""
+    pipeline = E2EPipeline([
+        Step('pruner', PruneHierarchicalTarget(
+            size_threshold=50
+        ), postprocessing=position([4, 1])),
+        Step('icf', InfrequentClassFilter(
+            size_threshold=100
+        ), postprocessing=position([4, 1])),
+        Step('tfsubj', TfidfVectorizer(
+            sublinear_tf=True,
+            min_df=5,
+            max_features=10,
+            norm='l2',
+            ngram_range=(1, 2),
+            stop_words='english',
+        ), preprocessing=lambda s: {'raw_documents': s[4]['title'], 'y': s.get(1, None)},
+             postprocessing=position(6)),
+        Step('tfbody', TfidfVectorizer(
+            sublinear_tf=True,
+            min_df=5,
+            norm='l2',
+            ngram_range=(1, 2),
+            stop_words='english',
+        ), preprocessing=lambda s: {'raw_documents': s[4]['body'], 'y': s.get(1, None)},
+             postprocessing=position(3)),
+        Step('svd', TruncatedSVD(
+            n_components=100
+        ), preprocessing=reposition({3: 0})
+             , postprocessing=position(3)),
+        Step('merge', MergeSubjectBody(),
+             preprocessing=reposition({6: 0, 3: 1}),
+             postprocessing=position(4)),
+        Step('svc', CalibratedClassifierCV(
+            base_estimator=svm.LinearSVC(),
+            cv=5
+        ), preprocessing=reposition({4: 0}),
+             postprocessing=None),
+    ])
+    x = df[['title', 'body']]
+    y = df['target_path']
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    pipeline.fit(x_train, y_train)
+    y_pred = pipeline.predict(x_test)
     assert y_pred.shape == y_test.shape
