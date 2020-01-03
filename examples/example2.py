@@ -44,7 +44,7 @@ pipeline = E2EPipeline([
         n_components=100
     )),
     ('svc', CalibratedClassifierCV(
-        base_estimator=svm.LinearSVC(),
+        base_estimator=svm.LinearSVC(random_state=33),
         cv=5
     )),
 ])

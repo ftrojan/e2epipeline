@@ -18,7 +18,7 @@ def object_info(obj) -> str:
     if isinstance(obj, tuple):
         res = f"tuple{len(obj)} = ({', '.join([object_info(xi) for xi in obj])})"
     elif isinstance(obj, dict):
-        res = f"dict{len(obj)} = ({', '.join([str(k) + ': ' + object_info(v) for k, v in obj.items()])})"
+        res = f"dict{len(obj)} = {{{', '.join([str(k) + ': ' + object_info(v) for k, v in obj.items()])}}}"
     elif isinstance(obj, list):
         res = f"list({len(obj)})"
     elif isinstance(obj, pd.DataFrame):
