@@ -103,7 +103,6 @@ def is_compatible(parameter: inspect.Parameter, data_type):
             compatible = data_type in parameter_type.__args__
         else:
             compatible = False
-    logging.debug(f"parameter {parameter.name}: type={parameter_type} data_type={data_type} compatible={compatible}")
     return compatible
 
 
