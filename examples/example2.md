@@ -1,6 +1,6 @@
 # Filter out Infrequent Classes
 
-In this example we will discover the limits of the Scikit-learn pipeline and learn how to solve the problem using `E2EPipeline`. Let us train our Scikit-learn pipeline from the [example above](#standard-scikit-learn-pipeline) on a different dataset. Let us use the [`all_tickets_1000.csv`](data/all_tickets_1000.csv) now. This dataset contains additional observations with small classes (low number of examples).
+In this example we will discover the limits of the Scikit-learn pipeline and learn how to solve the problem using `E2EPipeline`. Let us train our Scikit-learn pipeline from the [example above](#standard-scikit-learn-pipeline) on a different dataset. Let us use the [`all_tickets_1000.csv`](../data/all_tickets_1000.csv) now. This dataset contains additional observations with small classes (low number of examples).
 
 ```python
 df = pd.read_csv('all_tickets_1000.csv')

@@ -1,6 +1,6 @@
 # Standard Scikit-learn Pipeline
 
-We start with showing the design principle #1. You do not need to worry replacing your Scikit-learn pipeline with the `E2EPipeline`. They both work in the same way and provide the same results. Let us demonstrate this on a task of text classification. The dataset [`all_tickets_906.csv`](data/all_tickets_906.csv) contains 906 customer tickets classified into a product hierarchy. The text body of each ticket is stored in the column named `body` and the hierarchical product path (the target) is stored in the column `target_path`. To fit a simple linear model we can use for example the following Scikit-learn pipeline:
+We start with showing the design principle #1. You do not need to worry replacing your Scikit-learn pipeline with the `E2EPipeline`. They both work in the same way and provide the same results. Let us demonstrate this on a task of text classification. The dataset [`all_tickets_906.csv`](../data/all_tickets_906.csv) contains 906 customer tickets classified into a product hierarchy. The text body of each ticket is stored in the column named `body` and the hierarchical product path (the target) is stored in the column `target_path`. To fit a simple linear model we can use for example the following Scikit-learn pipeline:
 
 ```python
 import pandas as pd
