@@ -1,13 +1,17 @@
 # Filter out Infrequent Classes
 
-In this example we will discover the limits of the Scikit-learn pipeline and learn how to solve the problem using `E2EPipeline`. Let us train our Scikit-learn pipeline from the [example above](#standard-scikit-learn-pipeline) on a different dataset. Let us use the [`all_tickets_1000.csv`](../data/all_tickets_1000.csv) now. This dataset contains additional observations with small classes (low number of examples).
+In this example we will discover the limits of the Scikit-learn pipeline and learn how to solve the problem using `E2EPipeline`. Let us fit our Scikit-learn pipeline from the [example 1](#standard-scikit-learn-pipeline) on a different dataset. Let us use the [`all_tickets_1000.csv`](../data/all_tickets_1000.csv) now. This dataset contains additional observations with small classes (low number of examples).
 
 ```python
 df = pd.read_csv('all_tickets_1000.csv')
 pipeline.fit(x_train, y_train)
 ```
 
-The fit fails with the `ValueError: Requesting 5-fold cross-validation but provided less than 5 examples for at least one class`. Indeed, the `CalibratedClassifierCV` cannot calibrate the probability if a class is too small. We might want to exclude those small classes from the training dataset. To achieve that, we want to introduce a new transformer as the very first step in the pipeline. This transformer will exclude all the examples of small classes (below some threshold) in the `fit` method, while keep all the examples in the `transform` method. It will be a custom transformer removes the selected examples from both `X` and `y`. The definition is following.
+The fit fails with the 
+
+```ValueError: Requesting 5-fold cross-validation but provided less than 5 examples for at least one class.```
+
+Indeed, the `CalibratedClassifierCV` cannot calibrate the probability if a class is too small. We might want to exclude those small classes from the training dataset. To achieve that, we want to introduce a new transformer as the very first step of our pipeline. This transformer will exclude all the examples of small classes (below a threshold) in the `fit` method, while keep all the examples in the `transform` method. It will be a custom transformer which removes the selected examples from both `X` and `y`. The definition is following.
 
 ```python
 import numpy as np
@@ -43,7 +47,7 @@ class InfrequentClassFilter(BaseEstimator):
         return self.fit(X, y).transform(X, y)
 ```
 
-Note that the `transform` method has two branches. The `y is None` branch will be called in the `pipeline.predict(x_test)` when no `y` argument is supplied and this is propagated across all the pipeline steps. The `y is not None` branch will be called in the `pipeline.fit` when `y` argument is supplied. The output will be always a tuple, either with just one element (if just `X` is supplied) or two elements (if both `X` and `y` are supplied).
+Note that the `transform` method has two branches. The `y is None` branch will be called in the `pipeline.predict(x_test)` when there is no `y` argument supplied. The `y is not None` branch will be called in the `pipeline.fit` when the `y` argument is supplied. The output will be always a tuple, either with just one element (if just `X` is supplied) or two elements (if both `X` and `y` are supplied).
 
 Try the new transformer on our train dataset and see what happens.
 
@@ -57,7 +61,7 @@ print(f"res=({res[0].shape}, {res[1].shape})")
 
 The output shows that with `size_threshold=50` the new transformer reduces both `x_train` and `y_train` from original 724 examples down to 466 examples, keeping only the classes with at least 50 examples each.
 
-Let us put now the transformer as the very first step into our pipeline.
+Let us put now the transformer as the very first step into our Scikit-learn pipeline.
 
 ```python
 pipeline = Pipeline([
